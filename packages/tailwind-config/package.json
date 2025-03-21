@@ -1,0 +1,15 @@
+{
+  "name": "@repo/tailwind-config",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "exports": {
+    "./postcssConfig": "./postcss.config.mjs",
+    "./styles": "./styles.tsx"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.0.15",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.0.15"
+  }
+}
