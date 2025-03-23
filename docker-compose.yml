@@ -1,6 +1,18 @@
 version: "3.9"
 
 services:
+  pixora-postgres:
+    image: postgres
+    container_name: pixora-postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=harshal
+      - PGDATA=/data/postgres-pixora
+    volumes:
+      - postgres-pixora:/data/postgres-pixora
+
   pixora-minio:
     image: quay.io/minio/minio:RELEASE.2022-02-18T01-50-10Z
     container_name: pixora-minio
@@ -29,3 +41,4 @@ services:
 
 volumes:
   pixora-minio:
+  postgres-pixora:
