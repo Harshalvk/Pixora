@@ -15,7 +15,7 @@ model User {
 
 model Task {
   id          Int          @id @default(autoincrement())
-  title       String       @default("Select the most appropriate option")
+  title       String?      @default("Select the most appropriate option")
   userId      Int
   signature   String
   amount      String
@@ -26,8 +26,7 @@ model Task {
 
 model Option {
   id          Int          @id @default(autoincrement())
-  imgaeUrl    String
-  optionId    Int
+  imageUrl    String
   taskId      Int
   task        Task         @relation(fields: [taskId], references: [id])
   submissions Submission[]
