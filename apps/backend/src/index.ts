@@ -6,6 +6,8 @@ import userRouter from "./routes/user.route.js";
 const app = express();
 const PORT = 5050;
 
+app.use(express.json());
+
 app.use("/v1/user", userRouter);
 // app.use("/v1/worker", workerRouter)
 
