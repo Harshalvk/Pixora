@@ -9,9 +9,6 @@ export async function authMiddleware(
 ): Promise<void> {
   const authHeader = req.headers["authorization"];
 
-  console.log("@@@@Authheader", authHeader);
-  console.log("@@JWT-SECRET", process.env.JWT_SECRET!);
-
   if (!authHeader) {
     res.status(403).json({
       error: "auth header not provided",
@@ -24,8 +21,6 @@ export async function authMiddleware(
       userId: string;
     };
 
-    console.log(Number(decoded.userId));
-
     if (!decoded.userId) {
       res.status(403).json({
         error: "Invalid token",
@@ -34,6 +29,56 @@ export async function authMiddleware(
     }
 
     const user = await prisma.user.findFirst({
+      where: {
+        id: Number(decoded.userId),
+      },
+    });
+
+    if (!user) {
+      res.status(403).json({
+        error: "worker does not exists",
+      });
+      return;
+    }
+
+    req.user = { id: user.id };
+
+    next();
+    return;
+  } catch (error) {
+    res.status(403).json({
+      error: "you are not logged in",
+    });
+  }
+}
+
+export async function workerAuthMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  const authHeader = req.headers["authorization"];
+
+  if (!authHeader) {
+    res.status(403).json({
+      error: "auth header not provided",
+    });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(authHeader, process.env.WORKER_JWT_SECRET!) as {
+      userId: string;
+    };
+
+    if (!decoded.userId) {
+      res.status(403).json({
+        error: "Invalid token",
+      });
+      return;
+    }
+
+    const user = await prisma.worker.findFirst({
       where: {
         id: Number(decoded.userId),
       },
