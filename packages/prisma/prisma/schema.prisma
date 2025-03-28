@@ -18,6 +18,7 @@ model Task {
   title       String?      @default("Select the most appropriate option")
   userId      Int
   signature   String
+  done        Boolean      @default(false)
   amount      String
   options     Option[]
   submissions Submission[]
@@ -36,7 +37,6 @@ model Worker {
   id            Int          @id @default(autoincrement())
   address       String       @unique
   submissions   Submission[]
-  balance       Int
   pendingAmount Int
   lockedAmount  Int
 }
@@ -50,6 +50,8 @@ model Submission {
   worker   Worker @relation(fields: [workerId], references: [id])
   option   Option @relation(fields: [optionId], references: [id])
   task     Task   @relation(fields: [taskId], references: [id])
+
+  @@unique([workerId, taskId])
 }
 
 model SubmissionCache {
