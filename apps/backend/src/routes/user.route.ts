@@ -7,7 +7,7 @@ import * as Minio from "minio";
 
 const router = Router();
 
-router.post("/sigin", async (req, res) => {
+router.post("/signin", async (req, res) => {
   // Todo: Add sign verification logic here
   const hardcodedAddress = "H5VW6DHRWkXSRLMjCPHtvWb8nQxBnajDNzV2vVeTHYNNB";
 
@@ -120,15 +120,13 @@ router.get("/task", authMiddleware, async (req: Request, res: Response) => {
   const taskId = req.query.taskId;
   const userId = req.user?.id;
 
-  console.log({
-    id: Number(taskId),
-    userId: Number(userId),
-  });
-
   const taskDetails = await prisma.task.findFirst({
     where: {
       id: Number(taskId),
       userId: Number(userId),
+    },
+    include: {
+      options: true,
     },
   });
 
@@ -153,22 +151,31 @@ router.get("/task", authMiddleware, async (req: Request, res: Response) => {
     string,
     {
       count: number;
-      task: {
+      option: {
         imageUrl: string;
       };
     }
   > = {};
 
+  taskDetails.options.forEach((option) => {
+    result[option.id] = {
+      count: 1,
+      option: {
+        imageUrl: option.imageUrl,
+      },
+    };
+  });
+
   response.forEach((r) => {
     if (!result[r.optionId]) {
       result[r.optionId] = {
         count: 0,
-        task: {
+        option: {
           imageUrl: r.option.imageUrl,
         },
       };
     } else {
-      result[r.optionId]!.count++
+      result[r.optionId]!.count++;
     }
   });
 
