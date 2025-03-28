@@ -1,0 +1,17 @@
+{
+  "name": "@repo/types",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "exports": {
+    "./userTypes": "./dist/index.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^3.24.2",
+    "@repo/typescript-config": "workspace:*"
+  }
+}
