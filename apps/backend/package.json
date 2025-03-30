@@ -9,16 +9,18 @@
   },
   "dependencies": {
     "@repo/prisma": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.1",
     "@types/express-serve-static-core": "^5.0.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "minio": "^8.0.5"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.9"
   }
 }
