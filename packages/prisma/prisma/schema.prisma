@@ -8,9 +8,10 @@ datasource db {
 }
 
 model User {
-  id      Int    @id @default(autoincrement())
-  address String @unique
+  id      Int       @id @default(autoincrement())
+  address String    @unique
   tasks   Task[]
+  Payouts Payouts[]
 }
 
 model Task {
@@ -19,7 +20,7 @@ model Task {
   userId      Int
   signature   String
   done        Boolean      @default(false)
-  amount      String
+  amount      Int
   options     Option[]
   submissions Submission[]
   user        User         @relation(fields: [userId], references: [id])
@@ -46,7 +47,7 @@ model Submission {
   workerId Int
   optionId Int
   taskId   Int
-  amount   String
+  amount   Int
   worker   Worker @relation(fields: [workerId], references: [id])
   option   Option @relation(fields: [optionId], references: [id])
   task     Task   @relation(fields: [taskId], references: [id])
@@ -65,4 +66,19 @@ model SubmissionCache {
   option6 Int
   option7 Int
   option8 Int
+}
+
+model Payouts {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  amount    Int
+  signature String
+  status    TxnStatus
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+enum TxnStatus {
+  Processing
+  Success
+  Failure
 }
