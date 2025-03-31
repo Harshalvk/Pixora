@@ -4,6 +4,7 @@ import { prisma } from "@repo/prisma/prismaClient";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { createTaskInputSchema } from "@repo/types/userTypes";
 import * as Minio from "minio";
+import { TOTAL_DECIMANLS } from "../lib/constants.js";
 
 const router = Router();
 
@@ -95,7 +96,7 @@ router.post("/task", authMiddleware, async (req: Request, res: Response) => {
     const response = await tx.task.create({
       data: {
         title: parseData.data?.title || "Select the image which looks great",
-        amount: "1",
+        amount: 1 * TOTAL_DECIMANLS,
         signature: parseData.data?.signature || "laksdjf324029jhfaoweifjw0e9",
         userId: req.user!.id,
       },
