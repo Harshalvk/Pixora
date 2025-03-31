@@ -4,10 +4,76 @@ import jwt from "jsonwebtoken";
 import { workerAuthMiddleware } from "../middlewares/auth.middleware.js";
 import { getNextTask } from "../lib/db.js";
 import { createSubmissonInputSchema } from "@repo/types/userTypes";
+import { TOTAL_SUB } from "../lib/constants.js";
 
 const router = Router();
 
-const TOTAL_SUB = 100;
+router.get("/balance", workerAuthMiddleware, async (req, res) => {
+  const userId = req.user?.id;
+  const worker = await prisma.worker.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+
+  res.json({
+    pendingAmount: worker?.pendingAmount,
+    lockedAmount: worker?.lockedAmount,
+  });
+});
+
+router.post("/payout", workerAuthMiddleware, async (req, res) => {
+  const userId = req.user?.id;
+  const worker = await prisma.worker.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!worker) {
+    res.status(403).json({
+      msg: "user not found",
+    });
+    return;
+  }
+
+  const address = worker.address;
+
+  const txnId = "0x234234"; //dummy for now
+
+  //you should add a lock here
+  await prisma.$transaction(async (tx) => {
+    await tx.worker.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        pendingAmount: {
+          decrement: worker.pendingAmount,
+        },
+        lockedAmount: {
+          increment: worker.pendingAmount,
+        },
+      },
+    });
+
+    await tx.payouts.create({
+      data: {
+        userId: Number(userId),
+        amount: worker.pendingAmount,
+        status: "Processing",
+        signature: txnId,
+      },
+    });
+  });
+
+  //logic here to create a transaction
+
+  res.json({
+    msg: "Processing payout",
+    amount: worker.pendingAmount,
+  });
+});
 
 router.post("/submission", workerAuthMiddleware, async (req, res) => {
   const userId = req.user?.id;
@@ -23,26 +89,26 @@ router.post("/submission", workerAuthMiddleware, async (req, res) => {
 
     const task = await getNextTask(userId);
 
-    if (!task || task?.id !== Number(parsedBody.data.taskId)) {
+    if (!task || task.id !== Number(parsedBody.data.taskId)) {
       res.status(411).json({
         msg: "Incorrect taskId",
       });
       return;
     }
 
-    const amount = (Number(task.amount) / TOTAL_SUB).toString();
+    const amount = Number(task.amount) / TOTAL_SUB;
 
     await prisma.$transaction(async (tx) => {
-      const submission = await prisma.submission.create({
+      const submission = await tx.submission.create({
         data: {
           optionId: Number(parsedBody.data.selection),
           workerId: userId,
           taskId: Number(parsedBody.data.taskId),
-          amount: (Number(task.amount) / TOTAL_SUB).toString(),
+          amount: task.amount / TOTAL_SUB,
         },
       });
 
-      await prisma.worker.update({
+      await tx.worker.update({
         where: {
           id: userId,
         },
