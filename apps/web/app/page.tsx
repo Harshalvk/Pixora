@@ -1,3 +1,4 @@
+import { Button } from "@repo/ui/components/button";
 import React from "react";
 
 const HomePage = () => {
@@ -8,6 +9,7 @@ const HomePage = () => {
       </div>
       <div>
         <p className="">hello</p>
+        <Button>Hello</Button>
       </div>
     </div>
   );
