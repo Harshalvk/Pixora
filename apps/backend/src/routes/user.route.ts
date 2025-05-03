@@ -61,20 +61,25 @@ router.get(
   "/presignedUrl/:filename",
   authMiddleware,
   async (req: Request, res: Response) => {
-    const userId = req.user?.id;
     const fileName = req.params.filename;
 
-    const url = await minioClient.presignedPutObject("pixora", `${fileName}`);
+    try {
+      const url = await minioClient.presignedPutObject("pixora", `${fileName}`);
 
-    res.send({
-      url,
-    });
+      res.send({
+        url,
+      });
+    } catch (error) {
+      res.send({ err: "file not uploaded" });
+      return;
+    }
   }
 );
 
 router.post("/task", authMiddleware, async (req: Request, res: Response) => {
   const body = req.body;
   const parseData = createTaskInputSchema.safeParse(body);
+  console.log(parseData);
 
   if (!parseData.success) {
     res.status(411).json({
