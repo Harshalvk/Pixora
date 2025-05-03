@@ -104,7 +104,7 @@ router.post("/submission", workerAuthMiddleware, async (req, res) => {
           optionId: Number(parsedBody.data.selection),
           workerId: userId,
           taskId: Number(parsedBody.data.taskId),
-          amount: task.amount / TOTAL_SUB,
+          amount
         },
       });
 
