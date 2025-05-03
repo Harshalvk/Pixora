@@ -1,9 +1,10 @@
 "use client";
 
-import { ThemeProvider } from "@repo/ui/components/Providers/ThemeProvider";
 import React from "react";
+import { ThemeProvider } from "@repo/ui/components/Providers/ThemeProvider";
 import WalletContextProvider from "./Providers/WalletContextProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@repo/ui/components/sonner";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
@@ -16,6 +17,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     >
       <WalletContextProvider>
         <QueryClientProvider client={queryClient}>
+          <Toaster />
           {children}
         </QueryClientProvider>
       </WalletContextProvider>
