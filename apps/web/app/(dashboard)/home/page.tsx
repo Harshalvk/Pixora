@@ -18,7 +18,9 @@ const Home = () => {
 
   const token = localStorage.getItem("authToken");
 
-  const { mutate } = useMutation({
+  console.log("SELECTED IMAGES:::", images);
+
+  const { mutate, isPending } = useMutation({
     mutationFn: CreateTask,
     onMutate: () => {
       toast.loading("Creating task...", { id: "create-task" });
@@ -55,7 +57,7 @@ const Home = () => {
         <Button
           variant={"secondary"}
           className="border"
-          disabled={images.length < 2}
+          disabled={images.length < 2 || isPending}
           onClick={() => mutate({ taskTitle, images, token })}
         >
           Create Task
@@ -76,11 +78,11 @@ function FileUpload({
 
   if (!token) token = "ljsdfkljdsf";
 
+  console.log("UP IMAGES:::", uploadedImg);
+
   useEffect(() => {
-    console.log(uploadedImg);
-    uploadedImg.map((image) => {
-      setImages((prev) => [...prev, { imageUrl: image }]);
-    });
+    const newImags = uploadedImg.map((image) => ({ imageUrl: image }));
+    setImages(newImags);
   }, [setImages, uploadedImg]);
 
   const { mutate } = useMutation({
