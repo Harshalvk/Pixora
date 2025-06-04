@@ -103,6 +103,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@repo/prisma':
+        specifier: workspace:*
+        version: link:../../packages/prisma
       '@repo/types':
         specifier: workspace:*
         version: link:../../packages/types
