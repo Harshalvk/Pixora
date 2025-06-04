@@ -61,19 +61,20 @@ const WalletConnection = (props: Props) => {
             </DialogTrigger>
           ) : (
             <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button className="w-full border dark:border-zinc-800" variant={"secondary"}>
-                  <div className="truncate md:w-[150px] w-[100px]">
-                    {publicKey.toBase58()}
-                  </div>
+              <DropdownMenuTrigger asChild className="max-w-40">
+                <Button
+                  className="w-full border dark:border-zinc-800"
+                  variant={"secondary"}
+                >
+                  <p className="truncate">{publicKey.toBase58()}</p>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full">
-                <DropdownMenuItem asChild>
+              <DropdownMenuContent className="w-40">
+                <DropdownMenuItem asChild className="w-full">
                   <Button
                     onClick={handleDisconnect}
-                    className="w-full"
-                    variant={"ghost"}
+                    className="w-full p-0"
+                    variant={"secondary"}
                   >
                     Disconnect
                   </Button>
