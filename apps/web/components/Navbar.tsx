@@ -10,8 +10,10 @@ export const metadata: Metadata = {
 
 const Navbar = () => {
   return (
-    <nav className="p-2 border-b flex justify-between">
-      <p className="font-black text-xl sm:text-2xl">Pixora</p>
+    <nav className="p-2 border-b flex justify-between font-sans">
+      <p className="font-black text-xl sm:text-2xl bg-gradient-to-b from-zinc-600 to-zinc-950 dark:from-zinc-400 dark:to-zinc-300 bg-clip-text text-transparent">
+        Pixora
+      </p>
       <div className="flex gap-2">
         <ModeToggle />
         <WalletConnection />
